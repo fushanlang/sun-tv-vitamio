@@ -17,6 +17,11 @@
 
 package io.vov.vitamio.widget;
 
+import io.vov.vitamio.utils.Log;
+import io.vov.vitamio.utils.StringUtils;
+
+import java.lang.reflect.Method;
+
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -38,11 +43,6 @@ import android.widget.PopupWindow;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
-
-import java.lang.reflect.Method;
-
-import io.vov.vitamio.utils.Log;
-import io.vov.vitamio.utils.StringUtils;
 
 /**
  * A view containing controls for a MediaPlayer. Typically contains the buttons
@@ -449,7 +449,7 @@ public class MediaController extends FrameLayout {
     return super.dispatchKeyEvent(event);
   }
 
-  private void updatePausePlay() {
+private void updatePausePlay() {
     if (mRoot == null || mPauseButton == null)
       return;
 

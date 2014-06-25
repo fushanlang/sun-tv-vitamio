@@ -543,8 +543,47 @@ public class VideoView extends SurfaceView implements MediaController.MediaPlaye
       }
     }
 
+    if (isInPlaybackState()
+            && event.getAction() == KeyEvent.ACTION_DOWN
+            && event.getRepeatCount() == 0
+            && mMediaController != null
+            && mMediaPlayer != null
+            && consumeKeyEvent(keyCode, event)) {
+        return true;
+    }
     return super.onKeyDown(keyCode, event);
   }
+
+  private static final long FORWARD_STEP = 1 * 60 * 1000;
+  private static final long REWIND_STEP = 1 * 60 * 1000;
+  private boolean consumeKeyEvent(int keyCode, KeyEvent event) {
+      android.util.Log.e("wangpan", "consumeKeyEvent: keyCode=" + keyCode + ", repeat=" + event.getRepeatCount());
+      if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER
+              || keyCode == KeyEvent.KEYCODE_ENTER) {
+          if (mMediaPlayer.isPlaying()) {
+              pause();
+              mMediaController.show();
+            } else {
+              start();
+              mMediaController.hide();
+            }
+          return true;
+      } else if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
+          mMediaController.show();
+          long curPos = getCurrentPosition();
+          long seekTo = curPos - REWIND_STEP;
+          seekTo(seekTo > 0 ? seekTo : 0);
+          return true;
+      } else if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
+          mMediaController.show();
+          long curPos = getCurrentPosition();
+          long total = getDuration();
+          long seekTo = curPos + FORWARD_STEP;
+          seekTo(seekTo < total ? seekTo : total);
+          return true;
+      }
+    return false;
+}
 
   private void toggleMediaControlsVisiblity() {
     if (mMediaController.isShowing()) {
