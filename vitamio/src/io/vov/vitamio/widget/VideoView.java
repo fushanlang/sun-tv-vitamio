@@ -570,12 +570,14 @@ public class VideoView extends SurfaceView implements MediaController.MediaPlaye
           return true;
       } else if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
           mMediaController.show();
+          mMediaController.showSeekedTime();
           long curPos = getCurrentPosition();
           long seekTo = curPos - REWIND_STEP;
           seekTo(seekTo > 0 ? seekTo : 0);
           return true;
       } else if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
           mMediaController.show();
+          mMediaController.showSeekedTime();
           long curPos = getCurrentPosition();
           long total = getDuration();
           long seekTo = curPos + FORWARD_STEP;

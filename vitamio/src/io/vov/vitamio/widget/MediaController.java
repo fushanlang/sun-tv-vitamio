@@ -84,7 +84,7 @@ public class MediaController extends FrameLayout {
   private View mAnchor;
   private View mRoot;
   private SeekBar mProgress;
-  private TextView mEndTime, mCurrentTime;
+  private TextView mEndTime, mCurrentTime, mSeekedTime;
   private TextView mFileName;
   private OutlineTextView mInfoView;
   private String mTitle;
@@ -148,6 +148,8 @@ public class MediaController extends FrameLayout {
         mInfoView.setText(time);
       if (mCurrentTime != null)
         mCurrentTime.setText(time);
+      if (mSeekedTime != null)
+          mSeekedTime.setText(time);
     }
 
     public void onStopTrackingTouch(SeekBar bar) {
@@ -257,6 +259,7 @@ public class MediaController extends FrameLayout {
 
     mEndTime = (TextView) v.findViewById(getResources().getIdentifier("mediacontroller_time_total", "id", mContext.getPackageName()));
     mCurrentTime = (TextView) v.findViewById(getResources().getIdentifier("mediacontroller_time_current", "id", mContext.getPackageName()));
+    mSeekedTime = (TextView) v.findViewById(getResources().getIdentifier("seeked_time", "id", mContext.getPackageName()));
     mFileName = (TextView) v.findViewById(getResources().getIdentifier("mediacontroller_file_name", "id", mContext.getPackageName()));
     if (mFileName != null)
       mFileName.setText(mTitle);
@@ -278,6 +281,17 @@ public class MediaController extends FrameLayout {
 
   public void show() {
     show(sDefaultTimeout);
+  }
+
+  public void showSeekedTime() {
+      if (mSeekedTime != null) {
+          mSeekedTime.setVisibility(View.VISIBLE);
+      }
+  }
+  public void hideSeekedTime() {
+      if (mSeekedTime != null) {
+          mSeekedTime.setVisibility(View.GONE);
+      }
   }
 
   /**
@@ -348,6 +362,7 @@ public class MediaController extends FrameLayout {
         mShownListener.onShown();
     }
     updatePausePlay();
+    hideSeekedTime();
     mHandler.sendEmptyMessage(SHOW_PROGRESS);
 
     if (timeout != 0) {
@@ -409,6 +424,8 @@ public class MediaController extends FrameLayout {
       mEndTime.setText(StringUtils.generateTime(mDuration));
     if (mCurrentTime != null)
       mCurrentTime.setText(StringUtils.generateTime(position));
+    if (mSeekedTime != null)
+        mSeekedTime.setText(StringUtils.generateTime(position));
 
     return position;
   }
