@@ -1,53 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="74dp"
-    android:background="@color/mediacontroller_bg"
-    android:orientation="vertical" >
+    android:layout_height="match_parent"
+    android:background="@color/mediacontroller_bg" >
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
-
-        <ImageButton
-            android:id="@+id/mediacontroller_play_pause"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="5dp"
-            android:background="@drawable/mediacontroller_button"
-            android:contentDescription="@string/mediacontroller_play_pause"
-            android:src="@drawable/mediacontroller_pause" />
-
-        <TextView
-            android:id="@+id/mediacontroller_time_current"
-            style="@style/MediaController_Text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="5dp"
-            android:layout_toRightOf="@id/mediacontroller_play_pause" />
-
-        <TextView
-            android:id="@+id/mediacontroller_time_total"
-            style="@style/MediaController_Text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="5dp" />
+        android:layout_alignParentBottom="true" >
 
         <SeekBar
             android:id="@+id/mediacontroller_seekbar"
             style="@style/MediaController_SeekBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/mediacontroller_time_total"
-            android:layout_toRightOf="@id/mediacontroller_time_current"
             android:focusable="true"
             android:max="1000" />
+
+        <RelativeLayout
+            android:id="@+id/play_time_total_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/mediacontroller_seekbar"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp" >
+
+            <TextView
+                android:id="@+id/mediacontroller_time_current"
+                style="@style/MediaController_Text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true" />
+
+            <TextView
+                android:id="@+id/mediacontroller_time_total"
+                style="@style/MediaController_Text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true" />
+        </RelativeLayout>
+
+        <ImageButton
+            android:id="@+id/mediacontroller_play_pause"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/play_time_total_time"
+            android:background="@drawable/mediacontroller_button"
+            android:contentDescription="@string/mediacontroller_play_pause"
+            android:src="@drawable/mediacontroller_pause" />
     </RelativeLayout>
 
     <TextView
@@ -55,8 +56,10 @@
         style="@style/MediaController_Text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
         android:ellipsize="marquee"
         android:singleLine="true" />
 
-</LinearLayout>
+</RelativeLayout>

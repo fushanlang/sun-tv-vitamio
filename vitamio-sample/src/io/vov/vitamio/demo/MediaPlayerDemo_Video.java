@@ -95,7 +95,7 @@ public class MediaPlayerDemo_Video extends Activity implements OnBufferingUpdate
 				 * reasonably interleaved.
 				 * 
 				 */
-				path = "";
+				path = "http://bcs.duapp.com/video243/e5/b0/600/208003.m3u8";
 				if (path == "") {
 					// Tell the user to provide a media file URL.
 					Toast.makeText(MediaPlayerDemo_Video.this, "Please edit MediaPlayerDemo_Video Activity," + " and set the path variable to your media file URL.", Toast.LENGTH_LONG).show();
