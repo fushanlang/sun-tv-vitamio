@@ -26,6 +26,7 @@ import android.graphics.PixelFormat;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.SparseArray;
@@ -35,7 +36,6 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
-
 import io.vov.vitamio.MediaFormat;
 import io.vov.vitamio.MediaPlayer;
 import io.vov.vitamio.MediaPlayer.OnBufferingUpdateListener;
@@ -162,6 +162,7 @@ public class VideoView extends SurfaceView implements MediaController.MediaPlaye
     }
   };
   private Uri mUri;
+  private String mVideoName;
   private long mDuration;
   private int mCurrentState = STATE_IDLE;
   private int mTargetState = STATE_IDLE;
@@ -378,6 +379,10 @@ public class VideoView extends SurfaceView implements MediaController.MediaPlaye
     invalidate();
   }
 
+  public void setVideoName(String name) {
+      mVideoName = name;
+  }
+
   public void stopPlayback() {
     if (mMediaPlayer != null) {
       mMediaPlayer.stop();
@@ -446,18 +451,14 @@ public class VideoView extends SurfaceView implements MediaController.MediaPlaye
   }
 
   private void attachMediaController() {
-    if (mMediaPlayer != null && mMediaController != null) {
-      mMediaController.setMediaPlayer(this);
-      View anchorView = this.getParent() instanceof View ? (View) this.getParent() : this;
-      mMediaController.setAnchorView(anchorView);
-      mMediaController.setEnabled(isInPlaybackState());
+        if (mMediaPlayer != null && mMediaController != null) {
+            mMediaController.setMediaPlayer(this);
+            View anchorView = this.getParent() instanceof View ? (View) this.getParent() : this;
+            mMediaController.setAnchorView(anchorView);
+            mMediaController.setEnabled(isInPlaybackState());
 
-      if (mUri != null) {
-        List<String> paths = mUri.getPathSegments();
-        String name = paths == null || paths.isEmpty() ? "null" : paths.get(paths.size() - 1);
-        mMediaController.setFileName(name);
-      }
-    }
+            mMediaController.setFileName(TextUtils.isEmpty(mVideoName) ? "骄阳视频" : mVideoName);
+        }
   }
 
   public void setOnPreparedListener(OnPreparedListener l) {
@@ -557,9 +558,12 @@ public class VideoView extends SurfaceView implements MediaController.MediaPlaye
   private static final long FORWARD_STEP = 1 * 60 * 1000;
   private static final long REWIND_STEP = 1 * 60 * 1000;
   private boolean consumeKeyEvent(int keyCode, KeyEvent event) {
-      android.util.Log.e("wangpan", "consumeKeyEvent: keyCode=" + keyCode + ", repeat=" + event.getRepeatCount());
       if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER
               || keyCode == KeyEvent.KEYCODE_ENTER) {
+          if (mMediaPlayer.isBuffering()) {
+              //缓冲时不做暂停/播放操作
+              return false;
+          }
           if (mMediaPlayer.isPlaying()) {
               pause();
               mMediaController.show();
