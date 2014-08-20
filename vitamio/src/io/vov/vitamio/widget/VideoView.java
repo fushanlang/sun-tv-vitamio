@@ -545,8 +545,6 @@ public class VideoView extends SurfaceView implements MediaController.MediaPlaye
     }
 
     if (isInPlaybackState()
-            && event.getAction() == KeyEvent.ACTION_DOWN
-            && event.getRepeatCount() == 0
             && mMediaController != null
             && mMediaPlayer != null
             && consumeKeyEvent(keyCode, event)) {
@@ -555,11 +553,13 @@ public class VideoView extends SurfaceView implements MediaController.MediaPlaye
     return super.onKeyDown(keyCode, event);
   }
 
-  private static final long FORWARD_STEP = 1 * 60 * 1000;
-  private static final long REWIND_STEP = 1 * 60 * 1000;
+  private static final long FORWARD_STEP = 1 * 20 * 1000;
+  private static final long REWIND_STEP = 1 * 20 * 1000;
   private boolean consumeKeyEvent(int keyCode, KeyEvent event) {
-      if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER
-              || keyCode == KeyEvent.KEYCODE_ENTER) {
+      boolean firstKeyEvent = event.getAction() == KeyEvent.ACTION_DOWN
+              && event.getRepeatCount() == 0;
+      if (firstKeyEvent && (keyCode == KeyEvent.KEYCODE_DPAD_CENTER
+              || keyCode == KeyEvent.KEYCODE_ENTER)) {
           if (mMediaPlayer.isBuffering()) {
               //缓冲时不做暂停/播放操作
               return false;
