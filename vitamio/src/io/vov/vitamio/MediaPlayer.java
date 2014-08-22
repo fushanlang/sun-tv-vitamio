@@ -108,6 +108,7 @@ public class MediaPlayer {
    * @see io.vov.vitamio.MediaPlayer.OnInfoListener
    */
   public static final int MEDIA_INFO_DOWNLOAD_RATE_CHANGED = 901;
+  //为了播放上一集、下一集新增的
   public static final int VIDEOQUALITY_LOW = -16;
   public static final int VIDEOQUALITY_MEDIUM = 0;
   public static final int VIDEOQUALITY_HIGH = 16;

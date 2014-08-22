@@ -78,6 +78,7 @@ public class MediaController extends FrameLayout {
   private static final int FADE_OUT = 1;
   private static final int SHOW_PROGRESS = 2;
   private MediaPlayerControl mPlayer;
+  private OnEpisodeSwitchListener mEpisodeSwitchListener;
   private Context mContext;
   private PopupWindow mWindow;
   private int mAnimStyle;
@@ -94,6 +95,8 @@ public class MediaController extends FrameLayout {
   private boolean mInstantSeeking = false;
   private boolean mFromXml = false;
   private ImageButton mPauseButton;
+  private ImageButton mPreEpisodeButton;
+  private ImageButton mNextEpisodeButton;
   private AudioManager mAM;
   private OnShownListener mShownListener;
   private OnHiddenListener mHiddenListener;
@@ -123,6 +126,20 @@ public class MediaController extends FrameLayout {
       show(sDefaultTimeout);
     }
   };
+  private View.OnClickListener mPreEpisodeListener = new View.OnClickListener() {
+      public void onClick(View v) {
+          if (mEpisodeSwitchListener != null) {
+              mEpisodeSwitchListener.switchToPre();
+          }
+      }
+    };
+    private View.OnClickListener mNextEpisodeListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            if (mEpisodeSwitchListener != null) {
+                mEpisodeSwitchListener.switchToNext();
+            }
+        }
+      };
   private OnSeekBarChangeListener mSeekListener = new OnSeekBarChangeListener() {
     public void onStartTrackingTouch(SeekBar bar) {
       mDragging = true;
@@ -243,9 +260,17 @@ public class MediaController extends FrameLayout {
 
   private void initControllerView(View v) {
     mPauseButton = (ImageButton) v.findViewById(getResources().getIdentifier("mediacontroller_play_pause", "id", mContext.getPackageName()));
+    mPreEpisodeButton = (ImageButton) v.findViewById(getResources().getIdentifier("mediacontroller_play_pre_episode", "id", mContext.getPackageName()));
+    mNextEpisodeButton = (ImageButton) v.findViewById(getResources().getIdentifier("mediacontroller_play_next_episode", "id", mContext.getPackageName()));
     if (mPauseButton != null) {
       mPauseButton.requestFocus();
       mPauseButton.setOnClickListener(mPauseListener);
+    }
+    if (mPreEpisodeButton != null) {
+        mPreEpisodeButton.setOnClickListener(mPreEpisodeListener);
+    }
+    if (mNextEpisodeButton != null) {
+        mNextEpisodeButton.setOnClickListener(mNextEpisodeListener);
     }
 
     mProgress = (SeekBar) v.findViewById(getResources().getIdentifier("mediacontroller_seekbar", "id", mContext.getPackageName()));
@@ -493,6 +518,10 @@ private void updatePausePlay() {
     super.setEnabled(enabled);
   }
 
+  public void setOnEpisodeSwitchListener(OnEpisodeSwitchListener listener) {
+      this.mEpisodeSwitchListener = listener;
+  }
+
   public interface OnShownListener {
     public void onShown();
   }
@@ -517,4 +546,8 @@ private void updatePausePlay() {
     int getBufferPercentage();
   }
 
+  public interface OnEpisodeSwitchListener {
+      void switchToNext();
+      void switchToPre();
+  }
 }
