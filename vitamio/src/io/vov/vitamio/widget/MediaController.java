@@ -74,7 +74,7 @@ import android.widget.TextView;
  * created in an xml layout.
  */
 public class MediaController extends FrameLayout {
-  private static final int sDefaultTimeout = 3000;
+  private static final int sDefaultTimeout = 5000;
   private static final int FADE_OUT = 1;
   private static final int SHOW_PROGRESS = 2;
   private MediaPlayerControl mPlayer;
@@ -367,8 +367,6 @@ public class MediaController extends FrameLayout {
    */
   public void show(int timeout) {
     if (!mShowing && mAnchor != null && mAnchor.getWindowToken() != null) {
-      if (mPauseButton != null)
-        mPauseButton.requestFocus();
 
       if (mFromXml) {
         setVisibility(View.VISIBLE);
@@ -386,6 +384,15 @@ public class MediaController extends FrameLayout {
       if (mShownListener != null)
         mShownListener.onShown();
     }
+    if (mPauseButton != null) {
+        android.util.Log.e("wangpan", "show, reqeust focus!");
+        mPauseButton.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mPauseButton.requestFocus();
+            }
+        }, 200);
+    }
     updatePausePlay();
     hideSeekedTime();
     mHandler.sendEmptyMessage(SHOW_PROGRESS);
@@ -396,6 +403,17 @@ public class MediaController extends FrameLayout {
     }
   }
 
+  public boolean showingAndSeekbarFocused() {
+      boolean result = isShowing() && mProgress.isFocused();
+      android.util.Log.w("wangpan", "showingAndSeekbarFocused: " + result);
+      return result;
+  }
+  public boolean showingAndNoneFocused() {
+      boolean result = isShowing() && !(mProgress.isFocused() || mPauseButton.isFocused()
+              || mPreEpisodeButton.isFocused() || mNextEpisodeButton.isFocused());
+      android.util.Log.w("wangpan", "showingAndNoneFocused: " + result);
+      return result;
+  }
   public boolean isShowing() {
     return mShowing;
   }
@@ -470,6 +488,7 @@ public class MediaController extends FrameLayout {
   @Override
   public boolean dispatchKeyEvent(KeyEvent event) {
     int keyCode = event.getKeyCode();
+    android.util.Log.e("wangpan", "dispatchKeyEvent: " + keyCode);
     if (event.getRepeatCount() == 0 && (keyCode == KeyEvent.KEYCODE_HEADSETHOOK || keyCode == KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE || keyCode == KeyEvent.KEYCODE_SPACE)) {
       doPauseResume();
       show(sDefaultTimeout);
@@ -491,6 +510,9 @@ public class MediaController extends FrameLayout {
     return super.dispatchKeyEvent(event);
   }
 
+  public boolean requestPausePlayButtonFocus() {
+      return mPauseButton.requestFocus();
+  }
 private void updatePausePlay() {
     if (mRoot == null || mPauseButton == null)
       return;

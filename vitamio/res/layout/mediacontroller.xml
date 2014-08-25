@@ -21,6 +21,7 @@
             style="@style/MediaController_SeekBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:focusable="false"
             android:max="1000" />
 
         <RelativeLayout
@@ -50,8 +51,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/play_time_total_time"
-            android:layout_centerHorizontal="true"
             android:focusable="false"
+            android:layout_centerHorizontal="true"
             android:orientation="horizontal" >
 
             <ImageButton
@@ -60,6 +61,7 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/mediacontroller_play_pause"
                 android:nextFocusRight="@+id/mediacontroller_play_pause"
+                android:visibility="gone"
                 android:src="@drawable/pre_episode_normal" />
 
             <ImageButton
@@ -79,7 +81,8 @@
                 android:layout_marginLeft="40dp"
                 android:contentDescription="@string/mediacontroller_play_pause"
                 android:nextFocusLeft="@id/mediacontroller_play_pause"
-                android:src="@drawable/next_episode_normal" />
+                android:src="@drawable/next_episode_normal"
+                android:visibility="gone" />
 
         </LinearLayout>
     </RelativeLayout>
