@@ -51,8 +51,13 @@ import io.vov.vitamio.Vitamio;
 import io.vov.vitamio.utils.Log;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.jamdeo.tv.vod.player.thirdparty.VodSourcePlayerHelper;
+import com.jamdeo.tv.vod.player.thirdparty.VodSourcePlayerHelper.EVENT;
+import com.jamdeo.tv.vod.player.thirdparty.VodSourcePlayerHelper.SOURCE;
 
 /**
  * Displays a video file. The VideoView class can load images from various
@@ -205,6 +210,7 @@ public class VideoView extends SurfaceView implements MediaController.MediaPlaye
   private OnErrorListener mErrorListener = new OnErrorListener() {
     public boolean onError(MediaPlayer mp, int framework_err, int impl_err) {
       Log.d("Error: %d, %d", framework_err, impl_err);
+      VodSourcePlayerHelper.journalReport(mContext, SOURCE.VOOLE, EVENT.VIDEO_ERROR, new HashMap<VodSourcePlayerHelper.MapKey, String>());
       mCurrentState = STATE_ERROR;
       mTargetState = STATE_ERROR;
       if (mMediaController != null)
@@ -578,6 +584,7 @@ public class VideoView extends SurfaceView implements MediaController.MediaPlaye
           long curPos = getCurrentPosition();
           long seekTo = curPos - REWIND_STEP;
           seekTo(seekTo > 0 ? seekTo : 0);
+          VodSourcePlayerHelper.journalReport(mContext, SOURCE.VOOLE, EVENT.VIDEO_SEEK, new HashMap<VodSourcePlayerHelper.MapKey, String>());
           return true;
       } else if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
           mMediaController.show();
@@ -585,6 +592,7 @@ public class VideoView extends SurfaceView implements MediaController.MediaPlaye
           long curPos = getCurrentPosition();
           long total = getDuration();
           long seekTo = curPos + FORWARD_STEP;
+          VodSourcePlayerHelper.journalReport(mContext, SOURCE.VOOLE, EVENT.VIDEO_SEEK, new HashMap<VodSourcePlayerHelper.MapKey, String>());
           seekTo(seekTo < total ? seekTo : total);
           return true;
       }
